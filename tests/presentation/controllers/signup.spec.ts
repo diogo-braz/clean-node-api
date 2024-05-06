@@ -1,7 +1,6 @@
-import { AddAccount } from "@/domain/usecases/add-acount";
-import { SignUpController } from "@/presentation/controllers/signup";
+import { SignUpController } from "@/presentation/controllers/signup/signup";
+import { EmailValidator, AddAccount } from "@/presentation/controllers/signup/signup-protocols";
 import { InvalidParamError, MissingParamError, ServerError } from "@/presentation/errors";
-import { EmailValidator } from "@/presentation/protocols";
 
 import { mock, MockProxy } from "jest-mock-extended";
 
