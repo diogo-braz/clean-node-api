@@ -95,7 +95,7 @@ describe("SignUp Controller", () => {
   });
 
   it("should return status code 500 if email validator throws", () => {
-    emailValidatorStub.isValid.mockImplementation(() => { throw new Error(); });
+    emailValidatorStub.isValid.mockImplementationOnce(() => { throw new Error(); });
     const httpRequest = {
       body: {
         name: "any_name",
