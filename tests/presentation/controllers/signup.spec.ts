@@ -1,6 +1,5 @@
 import { SignUpController } from "@/presentation/controllers/signup";
-import { InvalidParamError } from "@/presentation/errors/invalid-param-error";
-import { MissingParamError } from "@/presentation/errors/missing-param-error";
+import { InvalidParamError, MissingParamError, ServerError } from "@/presentation/errors";
 import { EmailValidator } from "@/presentation/protocols/email-validator";
 
 import { mock, MockProxy } from "jest-mock-extended";
@@ -93,5 +92,20 @@ describe("SignUp Controller", () => {
     };
     sut.handle(httpRequest);
     expect(emailValidatorStub.isValid).toHaveBeenCalledWith("any_email@mail.com");
+  });
+
+  it("should return status code 500 if email validator throws", () => {
+    emailValidatorStub.isValid.mockImplementation(() => { throw new Error(); });
+    const httpRequest = {
+      body: {
+        name: "any_name",
+        email: "invalid_email@mail.com",
+        password: "any_password",
+        passwordConfirmation: "any_password"
+      }
+    };
+    const httpResponse = sut.handle(httpRequest);
+    expect(httpResponse.statusCode).toBe(500);
+    expect(httpResponse.body).toEqual(new ServerError());
   });
 });
