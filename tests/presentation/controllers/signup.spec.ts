@@ -1,17 +1,20 @@
+import { AddAccount } from "@/domain/usecases/add-acount";
 import { SignUpController } from "@/presentation/controllers/signup";
 import { InvalidParamError, MissingParamError, ServerError } from "@/presentation/errors";
-import { EmailValidator } from "@/presentation/protocols/email-validator";
+import { EmailValidator } from "@/presentation/protocols";
 
 import { mock, MockProxy } from "jest-mock-extended";
 
 describe("SignUp Controller", () => {
   let emailValidatorStub: MockProxy<EmailValidator>;
+  let addAccountStub: MockProxy<AddAccount>;
   let sut: SignUpController;
 
   beforeEach(() => {
     emailValidatorStub = mock();
     emailValidatorStub.isValid.mockReturnValue(true);
-    sut = new SignUpController(emailValidatorStub);
+    addAccountStub = mock();
+    sut = new SignUpController(emailValidatorStub, addAccountStub);
   });
 
   it("should return status code 400 if no name is provided", () => {
@@ -121,5 +124,23 @@ describe("SignUp Controller", () => {
     const httpResponse = sut.handle(httpRequest);
     expect(httpResponse.statusCode).toBe(500);
     expect(httpResponse.body).toEqual(new ServerError());
+  });
+
+  it("should call AddAccount with correct values", () => {
+    const httpRequest = {
+      body: {
+        name: "any_name",
+        email: "any_email@mail.com",
+        password: "any_password",
+        passwordConfirmation: "any_password"
+      }
+    };
+    sut.handle(httpRequest);
+    expect(addAccountStub.add).toHaveBeenCalledWith({
+      name: "any_name",
+      email: "any_email@mail.com",
+      password: "any_password"
+    });
+    expect(addAccountStub.add).toHaveBeenCalledTimes(1);
   });
 });
