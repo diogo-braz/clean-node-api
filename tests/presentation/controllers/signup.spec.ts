@@ -13,6 +13,12 @@ describe("SignUp Controller", () => {
     emailValidatorStub = mock();
     emailValidatorStub.isValid.mockReturnValue(true);
     addAccountStub = mock();
+    addAccountStub.add.mockReturnValue({
+      id: "valid_id",
+      name: "valid_name",
+      email: "valid_email@mail.com",
+      password: "valid_password"
+    });
     sut = new SignUpController(emailValidatorStub, addAccountStub);
   });
 
@@ -156,5 +162,24 @@ describe("SignUp Controller", () => {
     const httpResponse = sut.handle(httpRequest);
     expect(httpResponse.statusCode).toBe(500);
     expect(httpResponse.body).toEqual(new ServerError());
+  });
+
+  it("should return status code 200 if AddAccount is provided", () => {
+    const httpRequest = {
+      body: {
+        name: "valid_name",
+        email: "valid_email@mail.com",
+        password: "valid_password",
+        passwordConfirmation: "valid_password"
+      }
+    };
+    const httpResponse = sut.handle(httpRequest);
+    expect(httpResponse.statusCode).toBe(200);
+    expect(httpResponse.body).toEqual({
+      id: "valid_id",
+      name: "valid_name",
+      email: "valid_email@mail.com",
+      password: "valid_password"
+    });
   });
 });
