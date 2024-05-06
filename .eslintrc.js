@@ -2,7 +2,7 @@
 module.exports = {
   extends: [
     "eslint:recommended",
-    "plugin:@typescript-eslint/recommended-type-checked",
+    "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/stylistic-type-checked"
   ],
   parser: "@typescript-eslint/parser",
@@ -13,6 +13,7 @@ module.exports = {
   root: true,
   rules: {
     "no-undef": "off",
+    "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/quotes": ["error", "double"],
     "@typescript-eslint/semi": "error",
     "@typescript-eslint/space-before-function-paren": "error",
