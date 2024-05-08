@@ -113,7 +113,7 @@ describe("SignUp Controller", () => {
       }
     };
     await sut.handle(httpRequest);
-    expect(emailValidatorStub.isValid).toHaveBeenCalledWith("any_email@mail.com");
+    expect(emailValidatorStub.isValid).toHaveBeenCalledWith({ email: "any_email@mail.com" });
   });
 
   it("should return status code 500 if email validator throws", async () => {
