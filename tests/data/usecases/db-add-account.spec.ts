@@ -2,22 +2,29 @@ import { Encrypter } from "@/data/protocols/encrypter";
 import { DbAddAccount } from "@/data/usecases/db-add-account";
 import { MockProxy, mock } from "jest-mock-extended";
 
+export interface AddAccountRepository {
+  add: (account: any) => Promise<any>
+}
+
 describe("DbAddAccount Usecase", () => {
   let encrypterStub: MockProxy<Encrypter>;
+  let addAccountRepositoryStub: MockProxy<AddAccountRepository>;
   let sut: DbAddAccount;
 
   beforeEach(() => {
     encrypterStub = mock();
-    sut = new DbAddAccount(encrypterStub);
+    encrypterStub.encrypt.mockResolvedValue("hashed_password");
+    addAccountRepositoryStub = mock();
+    sut = new DbAddAccount(encrypterStub, addAccountRepositoryStub);
   });
 
-  it("should call Encrypter with correct password", () => {
+  it("should call Encrypter with correct password", async () => {
     const accountData = {
       name: "valid_name",
       email: "valid_email",
       password: "valid_password"
     };
-    sut.add(accountData);
+    await sut.add(accountData);
     expect(encrypterStub.encrypt).toHaveBeenCalledWith("valid_password");
   });
 
@@ -30,5 +37,19 @@ describe("DbAddAccount Usecase", () => {
     };
     const promise = sut.add(accountData);
     await expect(promise).rejects.toThrow();
+  });
+
+  it("should call AddAccountRepository with correct values", async () => {
+    const accountData = {
+      name: "valid_name",
+      email: "valid_email",
+      password: "valid_password"
+    };
+    await sut.add(accountData);
+    expect(addAccountRepositoryStub.add).toHaveBeenCalledWith({
+      name: "valid_name",
+      email: "valid_email",
+      password: "hashed_password"
+    });
   });
 });
