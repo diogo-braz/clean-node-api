@@ -1,7 +1,12 @@
+import bcrypt from "bcrypt";
+
 import { BcryptAdapter } from "@/infra/cryptography/bcrypt-adapter";
 
-import bcrypt from "bcrypt";
-import { MockProxy, mock } from "jest-mock-extended";
+jest.mock("bcrypt", () => ({
+  async hash (): Promise<string> {
+    return "hash";
+  }
+}));
 
 describe("Bcrypt Adapter", () => {
   const salt = 12;
@@ -15,5 +20,10 @@ describe("Bcrypt Adapter", () => {
     const hashSpy = jest.spyOn(bcrypt, "hash");
     await sut.encrypt("any_value");
     expect(hashSpy).toHaveBeenCalledWith("any_value", salt);
+  });
+
+  it("should return a hash on success", async () => {
+    const result = await sut.encrypt("any_value");
+    expect(result).toBe("hash");
   });
 });
