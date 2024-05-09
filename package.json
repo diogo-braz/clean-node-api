@@ -21,6 +21,7 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/jest": "^29.5.12",
     "@types/module-alias": "^2.0.4",
     "@types/node": "^20.12.7",
@@ -37,6 +38,7 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "module-alias": "^2.2.3"
   },
   "_moduleAliases": {
