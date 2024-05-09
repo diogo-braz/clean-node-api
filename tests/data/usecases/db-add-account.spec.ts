@@ -1,10 +1,7 @@
+import { AddAccountRepository } from "@/data/protocols/add-account-repository";
 import { Encrypter } from "@/data/protocols/encrypter";
 import { DbAddAccount } from "@/data/usecases/db-add-account";
 import { MockProxy, mock } from "jest-mock-extended";
-
-export interface AddAccountRepository {
-  add: (account: any) => Promise<any>
-}
 
 describe("DbAddAccount Usecase", () => {
   let encrypterStub: MockProxy<Encrypter>;
