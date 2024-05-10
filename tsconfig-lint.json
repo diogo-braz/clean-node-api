@@ -3,5 +3,5 @@
   "compilerOptions": {
     "allowJs": true,
   },
-  "include": ["*.config.js", ".*rc.js"],
+  "include": ["*.config.js", ".*rc.js", "*-config.js"],
 }

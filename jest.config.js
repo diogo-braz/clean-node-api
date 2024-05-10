@@ -8,6 +8,7 @@ const config = {
     "@/(.+)": "<rootDir>/src/$1"
   },
   roots: ["<rootDir>/src", "<rootDir>/tests"],
+  preset: "@shelf/jest-mongodb",
   transform: {
     "\\.ts$": "ts-jest"
   }
