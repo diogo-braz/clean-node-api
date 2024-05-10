@@ -11,5 +11,5 @@ export namespace AddAccount {
     password: string,
   }
 
-  export type Result = AccountEntity | null;
+  export type Result = AccountEntity;
 }
