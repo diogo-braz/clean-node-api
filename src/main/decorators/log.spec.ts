@@ -55,6 +55,6 @@ describe("LogController Decorator", () => {
   it("should call LogErrorRepository with correct error if controller returns a server error", async () => {
     controllerStub.handle.mockResolvedValueOnce(makeFakeServerError());
     await sut.handle(makeFakeRequest());
-    expect(logErrorRepositoryStub.log).toHaveBeenCalledWith("any_stack");
+    expect(logErrorRepositoryStub.logError).toHaveBeenCalledWith("any_stack");
   });
 });
