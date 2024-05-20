@@ -1,7 +1,7 @@
-import { SignUpController } from "../../../src/presentation/controllers/signup/signup";
-import { EmailValidator, AddAccount, AccountEntity } from "../../../src/presentation/controllers/signup/signup-protocols";
-import { InvalidParamError, MissingParamError, ServerError } from "../../../src/presentation/errors";
-import { badRequest, ok, serverError } from "../../../src/presentation/helpers/http-helper";
+import { SignUpController } from "./signup/signup";
+import { EmailValidator, AddAccount, AccountEntity } from "./signup/signup-protocols";
+import { InvalidParamError, MissingParamError, ServerError } from "../errors";
+import { badRequest, ok, serverError } from "../helpers/http-helper";
 
 import { mock, MockProxy } from "jest-mock-extended";
 

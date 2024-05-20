@@ -1,8 +1,8 @@
-import { AddAccountRepository } from "../../../src/data/protocols/add-account-repository";
-import { Encrypter } from "../../../src/data/protocols/encrypter";
-import { DbAddAccount } from "../../../src/data/usecases/db-add-account";
-import { AccountEntity } from "../../../src/domain/entities/account";
-import { AddAccount } from "../../../src/domain/usecases/add-account";
+import { AddAccountRepository } from "../protocols/add-account-repository";
+import { Encrypter } from "../protocols/encrypter";
+import { DbAddAccount } from "./db-add-account";
+import { AccountEntity } from "../../domain/entities/account";
+import { AddAccount } from "../../domain/usecases/add-account";
 import { MockProxy, mock } from "jest-mock-extended";
 
 const makeFakeAccount = (): AccountEntity => ({

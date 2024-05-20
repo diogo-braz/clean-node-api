@@ -1,5 +1,5 @@
-import { AccountMongoRepository } from "../../../../../src/infra/db/mongodb/account-repository/account";
-import { MongoDbHelper } from "../../../../../src/infra/db/mongodb/helpers/mongodb-helper";
+import { AccountMongoRepository } from "./account";
+import { MongoDbHelper } from "../helpers/mongodb-helper";
 
 describe("Account Mongo Repository", () => {
   let sut: AccountMongoRepository;

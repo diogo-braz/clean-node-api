@@ -6,7 +6,7 @@ const config = {
   ],
   coverageDirectory: "coverage",
   coverageProvider: "babel",
-  roots: ["<rootDir>/src", "<rootDir>/tests"],
+  roots: ["<rootDir>/src"],
   preset: "@shelf/jest-mongodb",
   transform: {
     "\\.ts$": "ts-jest"
