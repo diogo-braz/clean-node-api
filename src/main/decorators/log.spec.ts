@@ -26,4 +26,17 @@ describe("LogController Decorator", () => {
     expect(controllerStub.handle).toHaveBeenCalledWith(httpRequest);
     expect(controllerStub.handle).toHaveBeenCalledTimes(1);
   });
+
+  it("should return the same result of the controller", async () => {
+    const httpRequest = {
+      body: {
+        email: "any_email",
+        name: "any_name",
+        password: "any_password",
+        passwordConfirmation: "any_password"
+      }
+    };
+    const httpResponse = await sut.handle(httpRequest);
+    expect(httpResponse).toEqual({ statusCode: 200, body: { success: true } });
+  });
 });
