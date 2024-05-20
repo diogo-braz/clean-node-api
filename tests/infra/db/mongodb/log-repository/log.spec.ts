@@ -1,5 +1,5 @@
-import { MongoDbHelper } from "@/infra/db/mongodb/helpers/mongodb-helper";
-import { LogMongoRepository } from "@/infra/db/mongodb/log-repository/log";
+import { MongoDbHelper } from "../../../../../src/infra/db/mongodb/helpers/mongodb-helper";
+import { LogMongoRepository } from "../../../../../src/infra/db/mongodb/log-repository/log";
 import { Collection } from "mongodb";
 
 describe("Log Mongo Repository", () => {

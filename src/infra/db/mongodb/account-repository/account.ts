@@ -1,5 +1,5 @@
-import { AddAccountRepository } from "@/data/protocols/add-account-repository";
-import { AddAccount } from "@/domain/usecases/add-account";
+import { AddAccountRepository } from "../../../../data/protocols/add-account-repository";
+import { AddAccount } from "../../../../domain/usecases/add-account";
 import { MongoDbHelper } from "../helpers/mongodb-helper";
 import { IdMapper } from "../mappers/id-mapper";
 
