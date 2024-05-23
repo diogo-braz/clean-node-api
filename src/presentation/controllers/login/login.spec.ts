@@ -3,6 +3,7 @@ import { badRequest, serverError } from "../../helpers/http-helper";
 import { InvalidParamError, MissingParamError } from "../../../presentation/errors";
 import { EmailValidator, HttpRequest } from "../signup/signup-protocols";
 import { MockProxy, mock } from "jest-mock-extended";
+import { Authentication } from "../../../data/protocols/authentication";
 
 const makeFakeRequest = (): HttpRequest => ({
   body: {
@@ -13,12 +14,15 @@ const makeFakeRequest = (): HttpRequest => ({
 
 describe("Login Controller", () => {
   let emailValidatorStub: MockProxy<EmailValidator>;
+  let authenticationStub: MockProxy<Authentication>;
   let sut: LoginController;
 
   beforeEach(() => {
     emailValidatorStub = mock();
     emailValidatorStub.isValid.mockReturnValue(true);
-    sut = new LoginController(emailValidatorStub);
+    authenticationStub = mock();
+    authenticationStub.auth.mockResolvedValue("any_token");
+    sut = new LoginController(emailValidatorStub, authenticationStub);
   });
 
   it("should return 400 if no email is provided", async () => {
@@ -56,5 +60,10 @@ describe("Login Controller", () => {
     emailValidatorStub.isValid.mockImplementationOnce(() => { throw new Error(); });
     const httpResponse = await sut.handle(makeFakeRequest());
     expect(httpResponse).toEqual(serverError(new Error()));
+  });
+
+  it("should call Authentication with correct values", async () => {
+    await sut.handle(makeFakeRequest());
+    expect(authenticationStub.auth).toHaveBeenCalledWith("any_email@mail.com", "any_password");
   });
 });
