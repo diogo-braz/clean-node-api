@@ -1,5 +1,5 @@
 import { LoginController } from "./login";
-import { badRequest, serverError } from "../../helpers/http-helper";
+import { badRequest, serverError, unauthorized } from "../../helpers/http-helper";
 import { InvalidParamError, MissingParamError } from "../../../presentation/errors";
 import { EmailValidator, HttpRequest } from "../signup/signup-protocols";
 import { MockProxy, mock } from "jest-mock-extended";
@@ -65,5 +65,11 @@ describe("Login Controller", () => {
   it("should call Authentication with correct values", async () => {
     await sut.handle(makeFakeRequest());
     expect(authenticationStub.auth).toHaveBeenCalledWith("any_email@mail.com", "any_password");
+  });
+
+  it("should return 401 if invalid credentials are provided", async () => {
+    authenticationStub.auth.mockResolvedValueOnce("");
+    const httpResponse = await sut.handle(makeFakeRequest());
+    expect(httpResponse).toEqual(unauthorized());
   });
 });
