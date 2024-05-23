@@ -1,5 +1,5 @@
 import { LoginController } from "./login";
-import { badRequest, serverError, unauthorized } from "../../helpers/http-helper";
+import { badRequest, ok, serverError, unauthorized } from "../../helpers/http-helper";
 import { InvalidParamError, MissingParamError } from "../../../presentation/errors";
 import { EmailValidator, HttpRequest } from "../signup/signup-protocols";
 import { MockProxy, mock } from "jest-mock-extended";
@@ -77,5 +77,10 @@ describe("Login Controller", () => {
     authenticationStub.auth.mockImplementationOnce(() => { throw new Error(); });
     const httpResponse = await sut.handle(makeFakeRequest());
     expect(httpResponse).toEqual(serverError(new Error()));
+  });
+
+  it("should return 200 if valid credentials are provided", async () => {
+    const httpResponse = await sut.handle(makeFakeRequest());
+    expect(httpResponse).toEqual(ok({ accessToken: "any_token" }));
   });
 });
