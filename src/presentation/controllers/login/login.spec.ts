@@ -1,6 +1,6 @@
 import { LoginController } from "./login";
 import { badRequest } from "../../helpers/http-helper";
-import { MissingParamError } from "../../../presentation/errors";
+import { InvalidParamError, MissingParamError } from "../../../presentation/errors";
 import { EmailValidator } from "../signup/signup-protocols";
 import { MockProxy, mock } from "jest-mock-extended";
 
@@ -10,6 +10,7 @@ describe("Login Controller", () => {
 
   beforeEach(() => {
     emailValidatorStub = mock();
+    emailValidatorStub.isValid.mockReturnValue(true);
     sut = new LoginController(emailValidatorStub);
   });
 
@@ -31,6 +32,18 @@ describe("Login Controller", () => {
     };
     const httpResponse = await sut.handle(httpRequest);
     expect(httpResponse).toEqual(badRequest(new MissingParamError("password")));
+  });
+
+  it("should return 400 if an invalid email is provided", async () => {
+    emailValidatorStub.isValid.mockReturnValueOnce(false);
+    const httpRequest = {
+      body: {
+        email: "any_email@mail.com",
+        password: "any_password"
+      }
+    };
+    const httpResponse = await sut.handle(httpRequest);
+    expect(httpResponse).toEqual(badRequest(new InvalidParamError("email")));
   });
 
   it("should call EmailValidator with correct email", async () => {
