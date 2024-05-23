@@ -1,7 +1,7 @@
-import { SignUpController } from "./signup/signup";
-import { EmailValidator, AddAccount, AccountEntity } from "./signup/signup-protocols";
-import { InvalidParamError, MissingParamError, ServerError } from "../errors";
-import { badRequest, ok, serverError } from "../helpers/http-helper";
+import { SignUpController } from "./signup";
+import { EmailValidator, AddAccount, AccountEntity, Validation } from "./signup-protocols";
+import { InvalidParamError, MissingParamError, ServerError } from "../../errors";
+import { badRequest, ok, serverError } from "../../helpers/http-helper";
 
 import { mock, MockProxy } from "jest-mock-extended";
 
@@ -24,6 +24,7 @@ const makeFakeAccount = (): AccountEntity => ({
 describe("SignUp Controller", () => {
   let emailValidatorStub: MockProxy<EmailValidator>;
   let addAccountStub: MockProxy<AddAccount>;
+  let validationStub: MockProxy<Validation>;
   let sut: SignUpController;
 
   beforeEach(() => {
@@ -31,7 +32,9 @@ describe("SignUp Controller", () => {
     emailValidatorStub.isValid.mockReturnValue(true);
     addAccountStub = mock();
     addAccountStub.add.mockResolvedValue(makeFakeAccount());
-    sut = new SignUpController(emailValidatorStub, addAccountStub);
+    validationStub = mock();
+    validationStub.validate.mockReturnValue(null);
+    sut = new SignUpController(emailValidatorStub, addAccountStub, validationStub);
   });
 
   it("should return status code 400 if no name is provided", async () => {
@@ -131,5 +134,11 @@ describe("SignUp Controller", () => {
   it("should return status code 200 if AddAccount is provided", async () => {
     const httpResponse = await sut.handle(makeFakeRequest());
     expect(httpResponse).toEqual(ok(makeFakeAccount()));
+  });
+
+  it("should call Validation with correct values", async () => {
+    const httpRequest = makeFakeRequest();
+    await sut.handle(httpRequest);
+    expect(validationStub.validate).toHaveBeenCalledWith(httpRequest.body);
   });
 });
