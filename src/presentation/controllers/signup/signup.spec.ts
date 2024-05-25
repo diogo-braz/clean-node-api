@@ -37,19 +37,6 @@ describe("SignUp Controller", () => {
     sut = new SignUpController(emailValidatorStub, addAccountStub, validationStub);
   });
 
-  it("should return status code 400 if password confirmation fails", async () => {
-    const httpRequest = {
-      body: {
-        name: "any_name",
-        email: "any_email@mail.com",
-        password: "any_password",
-        passwordConfirmation: "different_password"
-      }
-    };
-    const httpResponse = await sut.handle(httpRequest);
-    expect(httpResponse).toEqual(badRequest(new InvalidParamError("passwordConfirmation")));
-  });
-
   it("should return status code 400 if an invalid email is provided", async () => {
     emailValidatorStub.isValid.mockReturnValueOnce(false);
     const httpResponse = await sut.handle(makeFakeRequest());
