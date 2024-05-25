@@ -141,4 +141,10 @@ describe("SignUp Controller", () => {
     await sut.handle(httpRequest);
     expect(validationStub.validate).toHaveBeenCalledWith(httpRequest.body);
   });
+
+  it("should return 400 if Validation returns an error", async () => {
+    validationStub.validate.mockReturnValueOnce(new MissingParamError("any_field"));
+    const httpResponse = await sut.handle(makeFakeRequest());
+    expect(httpResponse).toEqual(badRequest(new MissingParamError("any_field")));
+  });
 });
