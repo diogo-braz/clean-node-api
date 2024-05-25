@@ -1,7 +1,7 @@
 import { badRequest, ok, serverError, unauthorized } from "../../../presentation/helpers/http-helper";
 import { Controller, EmailValidator, HttpRequest, HttpResponse } from "../signup/signup-protocols";
 import { InvalidParamError, MissingParamError } from "../../../presentation/errors";
-import { Authentication } from "@/data/protocols/authentication";
+import { Authentication } from "../../../data/protocols/authentication";
 
 export class LoginController implements Controller {
   constructor (
