@@ -1,6 +1,6 @@
 import { SignUpController } from "./signup";
 import { EmailValidator, AddAccount, AccountEntity, Validation } from "./signup-protocols";
-import { InvalidParamError, MissingParamError, ServerError } from "../../errors";
+import { MissingParamError, ServerError } from "../../errors";
 import { badRequest, ok, serverError } from "../../helpers/http-helper";
 
 import { mock, MockProxy } from "jest-mock-extended";
@@ -34,24 +34,7 @@ describe("SignUp Controller", () => {
     addAccountStub.add.mockResolvedValue(makeFakeAccount());
     validationStub = mock();
     validationStub.validate.mockReturnValue(null);
-    sut = new SignUpController(emailValidatorStub, addAccountStub, validationStub);
-  });
-
-  it("should return status code 400 if an invalid email is provided", async () => {
-    emailValidatorStub.isValid.mockReturnValueOnce(false);
-    const httpResponse = await sut.handle(makeFakeRequest());
-    expect(httpResponse).toEqual(badRequest(new InvalidParamError("email")));
-  });
-
-  it("should call email validator with correct email", async () => {
-    await sut.handle(makeFakeRequest());
-    expect(emailValidatorStub.isValid).toHaveBeenCalledWith({ email: "any_email@mail.com" });
-  });
-
-  it("should return status code 500 if email validator throws", async () => {
-    emailValidatorStub.isValid.mockImplementationOnce(() => { throw new Error(); });
-    const httpResponse = await sut.handle(makeFakeRequest());
-    expect(httpResponse).toEqual(serverError(new ServerError()));
+    sut = new SignUpController(addAccountStub, validationStub);
   });
 
   it("should call AddAccount with correct values", async () => {

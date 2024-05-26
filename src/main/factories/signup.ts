@@ -9,11 +9,10 @@ import { LogMongoRepository } from "../../infra/db/mongodb/log-repository/log";
 import { makeSignUpValidation } from "./signup-validation";
 
 export const makeSignUpController = (): Controller => {
-  const emailValidatorAdapter = new EmailValidatorAdapter();
   const encrypter = new BcryptAdapter(12);
   const addAccountRepository = new AccountMongoRepository();
   const dbAddAccount = new DbAddAccount(encrypter, addAccountRepository);
-  const signUpController = new SignUpController(emailValidatorAdapter, dbAddAccount, makeSignUpValidation());
+  const signUpController = new SignUpController(dbAddAccount, makeSignUpValidation());
   const logMongoRepository = new LogMongoRepository();
   return new LogControllerDecorator(signUpController, logMongoRepository);
 };
