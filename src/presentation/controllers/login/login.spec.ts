@@ -27,7 +27,7 @@ describe("Login Controller", () => {
 
   it("should call Authentication with correct values", async () => {
     await sut.handle(makeFakeRequest());
-    expect(authenticationStub.auth).toHaveBeenCalledWith("any_email@mail.com", "any_password");
+    expect(authenticationStub.auth).toHaveBeenCalledWith({ email: "any_email@mail.com", password: "any_password" });
   });
 
   it("should return 401 if invalid credentials are provided", async () => {
