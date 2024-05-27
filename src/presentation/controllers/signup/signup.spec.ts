@@ -1,7 +1,7 @@
 import { SignUpController } from "./signup";
 import { EmailValidator, AddAccount, AccountEntity, Validation } from "./signup-protocols";
 import { MissingParamError, ServerError } from "../../errors";
-import { badRequest, ok, serverError } from "../../helpers/http-helper";
+import { badRequest, ok, serverError } from "../../helpers/http/http-helper";
 
 import { mock, MockProxy } from "jest-mock-extended";
 

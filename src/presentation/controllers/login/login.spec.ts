@@ -1,6 +1,6 @@
 import { LoginController } from "./login";
-import { badRequest, ok, serverError, unauthorized } from "../../helpers/http-helper";
-import { InvalidParamError, MissingParamError } from "../../../presentation/errors";
+import { badRequest, ok, serverError, unauthorized } from "../../helpers/http/http-helper";
+import { MissingParamError } from "../../../presentation/errors";
 import { HttpRequest, Validation } from "../signup/signup-protocols";
 import { MockProxy, mock } from "jest-mock-extended";
 import { Authentication } from "../../../data/protocols/authentication";
