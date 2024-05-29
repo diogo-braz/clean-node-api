@@ -30,4 +30,10 @@ describe("DbAuthentication UseCase", () => {
     await sut.auth(makeFakeAuthentication());
     expect(loadAccountByEmailRepositoryStub.load).toHaveBeenCalledWith("any_email@mail.com");
   });
+
+  it("should throw if LoadAccountByEmailRepository throws", async () => {
+    loadAccountByEmailRepositoryStub.load.mockImplementationOnce(() => { throw new Error(); });
+    const promise = sut.auth(makeFakeAuthentication());
+    expect(promise).rejects.toThrow();
+  });
 });
