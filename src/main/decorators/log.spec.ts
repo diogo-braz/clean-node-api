@@ -3,7 +3,7 @@ import { LogControllerDecorator } from "./log";
 
 import { mock, MockProxy } from "jest-mock-extended";
 import { ok, serverError } from "../../presentation/helpers/http/http-helper";
-import { LogErrorRepository } from "../../data/protocols/log-error-repository";
+import { LogErrorRepository } from "../../data/protocols/db/log-error-repository";
 import { AccountEntity } from "../../domain/entities/account";
 
 const makeFakeRequest = () => ({

@@ -1,5 +1,5 @@
-import { AddAccountRepository } from "../../protocols/add-account-repository";
-import { Encrypter } from "../../protocols/encrypter";
+import { AddAccountRepository } from "../../protocols/db/add-account-repository";
+import { Encrypter } from "../../protocols/cryptography/encrypter";
 import { DbAddAccount } from "./db-add-account";
 import { AccountEntity } from "../../../domain/entities/account";
 import { AddAccount } from "../../../domain/usecases/add-account";
