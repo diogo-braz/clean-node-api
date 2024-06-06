@@ -36,4 +36,10 @@ describe("DbAuthentication UseCase", () => {
     const promise = sut.auth(makeFakeAuthentication());
     expect(promise).rejects.toThrow();
   });
+
+  it("should return null if LoadAccountByEmailRepository returns null", async () => {
+    loadAccountByEmailRepositoryStub.load.mockResolvedValueOnce(null);
+    const accessToken = await sut.auth(makeFakeAuthentication());
+    expect(accessToken).toBeNull();
+  });
 });
