@@ -2,13 +2,14 @@ import { LoadAccountByEmailRepository } from "../../../data/protocols/db/load-ac
 import { AccountEntity } from "../../../domain/entities/account";
 import { MockProxy, mock } from "jest-mock-extended";
 import { DbAuthentication } from "./db-authentication";
-import { AuthenticationModel } from "data/protocols/authentication";
+import { AuthenticationModel } from "../../../data/protocols/authentication";
+import { HashComparer } from "../../../data/protocols/cryptography/hash-comparer";
 
 const makeFakeAccount = (): AccountEntity => ({
   id: "any_id",
   name: "any_name",
   email: "any_email@mail.com",
-  password: "any_password"
+  password: "hashed_password"
 });
 
 const makeFakeAuthentication = (): AuthenticationModel => ({
@@ -18,12 +19,15 @@ const makeFakeAuthentication = (): AuthenticationModel => ({
 
 describe("DbAuthentication UseCase", () => {
   let loadAccountByEmailRepositoryStub: MockProxy<LoadAccountByEmailRepository>;
+  let hashComparerStub: MockProxy<HashComparer>;
   let sut: DbAuthentication;
 
   beforeEach(() => {
     loadAccountByEmailRepositoryStub = mock();
     loadAccountByEmailRepositoryStub.load.mockResolvedValue(makeFakeAccount());
-    sut = new DbAuthentication(loadAccountByEmailRepositoryStub);
+    hashComparerStub = mock();
+    hashComparerStub.compare.mockResolvedValue(true);
+    sut = new DbAuthentication(loadAccountByEmailRepositoryStub, hashComparerStub);
   });
 
   it("should call LoadAccountByEmailRepository with correct email", async () => {
@@ -41,5 +45,10 @@ describe("DbAuthentication UseCase", () => {
     loadAccountByEmailRepositoryStub.load.mockResolvedValueOnce(null);
     const accessToken = await sut.auth(makeFakeAuthentication());
     expect(accessToken).toBeNull();
+  });
+
+  it("should call HashComparer with correct values", async () => {
+    await sut.auth(makeFakeAuthentication());
+    expect(hashComparerStub.compare).toHaveBeenCalledWith("any_password", "hashed_password");
   });
 });
