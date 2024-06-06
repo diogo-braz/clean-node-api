@@ -51,4 +51,10 @@ describe("DbAuthentication UseCase", () => {
     await sut.auth(makeFakeAuthentication());
     expect(hashComparerStub.compare).toHaveBeenCalledWith("any_password", "hashed_password");
   });
+
+  it("should throw if HashComparer throws", async () => {
+    hashComparerStub.compare.mockImplementationOnce(() => { throw new Error(); });
+    const promise = sut.auth(makeFakeAuthentication());
+    expect(promise).rejects.toThrow();
+  });
 });
