@@ -85,4 +85,12 @@ describe("DbAuthentication UseCase", () => {
     await sut.auth(makeFakeAuthentication());
     expect(tokenGeneratorStub.generate).toHaveBeenCalledWith("any_id");
   });
+
+  it("should throw if TokenGenerator throws", async () => {
+    tokenGeneratorStub.generate.mockImplementationOnce(() => {
+      throw new Error();
+    });
+    const promise = sut.auth(makeFakeAuthentication());
+    expect(promise).rejects.toThrow();
+  });
 });
