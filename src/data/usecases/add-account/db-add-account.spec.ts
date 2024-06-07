@@ -1,5 +1,5 @@
 import { AddAccountRepository } from "../../protocols/db/add-account-repository";
-import { Encrypter } from "../../protocols/cryptography/encrypter";
+import { Hasher } from "../../protocols/cryptography/hasher";
 import { DbAddAccount } from "./db-add-account";
 import { AccountEntity } from "../../../domain/entities/account";
 import { AddAccount } from "../../../domain/usecases/add-account";
@@ -19,25 +19,25 @@ const makeFakeAccountData = (): AddAccount.Params => ({
 });
 
 describe("DbAddAccount Usecase", () => {
-  let encrypterStub: MockProxy<Encrypter>;
+  let hasherStub: MockProxy<Hasher>;
   let addAccountRepositoryStub: MockProxy<AddAccountRepository>;
   let sut: DbAddAccount;
 
   beforeEach(() => {
-    encrypterStub = mock();
-    encrypterStub.encrypt.mockResolvedValue("hashed_password");
+    hasherStub = mock();
+    hasherStub.hash.mockResolvedValue("hashed_password");
     addAccountRepositoryStub = mock();
     addAccountRepositoryStub.add.mockResolvedValue(makeFakeAccount());
-    sut = new DbAddAccount(encrypterStub, addAccountRepositoryStub);
+    sut = new DbAddAccount(hasherStub, addAccountRepositoryStub);
   });
 
-  it("should call Encrypter with correct password", async () => {
+  it("should call Hasher with correct password", async () => {
     await sut.add(makeFakeAccountData());
-    expect(encrypterStub.encrypt).toHaveBeenCalledWith("valid_password");
+    expect(hasherStub.hash).toHaveBeenCalledWith("valid_password");
   });
 
-  it("should throw if Encrypter throws", async () => {
-    encrypterStub.encrypt.mockImplementationOnce(() => { throw new Error(); });
+  it("should throw if Hasher throws", async () => {
+    hasherStub.hash.mockImplementationOnce(() => { throw new Error(); });
     const promise = sut.add(makeFakeAccountData());
     await expect(promise).rejects.toThrow();
   });

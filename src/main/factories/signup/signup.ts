@@ -8,9 +8,9 @@ import { SignUpController } from "../../../presentation/controllers/signup/signu
 import { Controller } from "../../../presentation/protocols";
 
 export const makeSignUpController = (): Controller => {
-  const encrypter = new BcryptAdapter(12);
+  const hasher = new BcryptAdapter(12);
   const addAccountRepository = new AccountMongoRepository();
-  const dbAddAccount = new DbAddAccount(encrypter, addAccountRepository);
+  const dbAddAccount = new DbAddAccount(hasher, addAccountRepository);
   const signUpController = new SignUpController(dbAddAccount, makeSignUpValidation());
   const logMongoRepository = new LogMongoRepository();
   return new LogControllerDecorator(signUpController, logMongoRepository);
