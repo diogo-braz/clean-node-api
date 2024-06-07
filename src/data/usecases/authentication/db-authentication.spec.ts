@@ -34,7 +34,7 @@ describe("DbAuthentication UseCase", () => {
     tokenGeneratorStub = mock();
     tokenGeneratorStub.generate.mockResolvedValue("any_token");
     updateAccessTokenRepositoryStub = mock();
-    updateAccessTokenRepositoryStub.update.mockResolvedValueOnce();
+    updateAccessTokenRepositoryStub.update.mockResolvedValue();
     sut = new DbAuthentication(
       loadAccountByEmailRepositoryStub,
       hashComparerStub,
@@ -108,5 +108,13 @@ describe("DbAuthentication UseCase", () => {
     updateAccessTokenRepositoryStub.update.mockResolvedValueOnce();
     await sut.auth(makeFakeAuthentication());
     expect(updateAccessTokenRepositoryStub.update).toHaveBeenCalledWith("any_id", "any_token");
+  });
+
+  it("should throw if UpdateAccessTokenRepository throws", async () => {
+    updateAccessTokenRepositoryStub.update.mockImplementationOnce(() => {
+      throw new Error();
+    });
+    const promise = sut.auth(makeFakeAuthentication());
+    expect(promise).rejects.toThrow();
   });
 });
