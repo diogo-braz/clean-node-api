@@ -4,7 +4,7 @@ import { MockProxy, mock } from "jest-mock-extended";
 import { DbAuthentication } from "./db-authentication";
 import { AuthenticationModel } from "../../../data/protocols/authentication";
 import { HashComparer } from "../../../data/protocols/cryptography/hash-comparer";
-import { TokenGenerator } from "../../../data/protocols/cryptography/token-generator";
+import { Encrypter } from "../../protocols/cryptography/encrypter";
 import { UpdateAccessTokenRepository } from "../../../data/protocols/db/update-access-token-repository";
 
 const makeFakeAccount = (): AccountEntity => ({
@@ -22,7 +22,7 @@ const makeFakeAuthentication = (): AuthenticationModel => ({
 describe("DbAuthentication UseCase", () => {
   let loadAccountByEmailRepositoryStub: MockProxy<LoadAccountByEmailRepository>;
   let hashComparerStub: MockProxy<HashComparer>;
-  let tokenGeneratorStub: MockProxy<TokenGenerator>;
+  let encrypterStub: MockProxy<Encrypter>;
   let updateAccessTokenRepositoryStub: MockProxy<UpdateAccessTokenRepository>;
   let sut: DbAuthentication;
 
@@ -31,14 +31,14 @@ describe("DbAuthentication UseCase", () => {
     loadAccountByEmailRepositoryStub.load.mockResolvedValue(makeFakeAccount());
     hashComparerStub = mock();
     hashComparerStub.compare.mockResolvedValue(true);
-    tokenGeneratorStub = mock();
-    tokenGeneratorStub.generate.mockResolvedValue("any_token");
+    encrypterStub = mock();
+    encrypterStub.encrypt.mockResolvedValue("any_token");
     updateAccessTokenRepositoryStub = mock();
     updateAccessTokenRepositoryStub.update.mockResolvedValue();
     sut = new DbAuthentication(
       loadAccountByEmailRepositoryStub,
       hashComparerStub,
-      tokenGeneratorStub,
+      encrypterStub,
       updateAccessTokenRepositoryStub,
     );
   });
@@ -86,20 +86,20 @@ describe("DbAuthentication UseCase", () => {
     expect(accessToken).toBeNull();
   });
 
-  it("should call TokenGenerator with correct id", async () => {
+  it("should call Encrypter with correct id", async () => {
     await sut.auth(makeFakeAuthentication());
-    expect(tokenGeneratorStub.generate).toHaveBeenCalledWith("any_id");
+    expect(encrypterStub.encrypt).toHaveBeenCalledWith("any_id");
   });
 
-  it("should throw if TokenGenerator throws", async () => {
-    tokenGeneratorStub.generate.mockImplementationOnce(() => {
+  it("should throw if Encrypter throws", async () => {
+    encrypterStub.encrypt.mockImplementationOnce(() => {
       throw new Error();
     });
     const promise = sut.auth(makeFakeAuthentication());
     expect(promise).rejects.toThrow();
   });
 
-  it("should call TokenGenerator with correct id", async () => {
+  it("should call Encrypter with correct id", async () => {
     const accessToken = await sut.auth(makeFakeAuthentication());
     expect(accessToken).toBe("any_token");
   });
