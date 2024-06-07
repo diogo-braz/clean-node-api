@@ -4,6 +4,7 @@ import { MockProxy, mock } from "jest-mock-extended";
 import { DbAuthentication } from "./db-authentication";
 import { AuthenticationModel } from "../../../data/protocols/authentication";
 import { HashComparer } from "../../../data/protocols/cryptography/hash-comparer";
+import { TokenGenerator } from "../../../data/protocols/cryptography/token-generator";
 
 const makeFakeAccount = (): AccountEntity => ({
   id: "any_id",
@@ -20,6 +21,7 @@ const makeFakeAuthentication = (): AuthenticationModel => ({
 describe("DbAuthentication UseCase", () => {
   let loadAccountByEmailRepositoryStub: MockProxy<LoadAccountByEmailRepository>;
   let hashComparerStub: MockProxy<HashComparer>;
+  let tokenGeneratorStub: MockProxy<TokenGenerator>;
   let sut: DbAuthentication;
 
   beforeEach(() => {
@@ -27,16 +29,26 @@ describe("DbAuthentication UseCase", () => {
     loadAccountByEmailRepositoryStub.load.mockResolvedValue(makeFakeAccount());
     hashComparerStub = mock();
     hashComparerStub.compare.mockResolvedValue(true);
-    sut = new DbAuthentication(loadAccountByEmailRepositoryStub, hashComparerStub);
+    tokenGeneratorStub = mock();
+    tokenGeneratorStub.generate.mockResolvedValue("any_token");
+    sut = new DbAuthentication(
+      loadAccountByEmailRepositoryStub,
+      hashComparerStub,
+      tokenGeneratorStub
+    );
   });
 
   it("should call LoadAccountByEmailRepository with correct email", async () => {
     await sut.auth(makeFakeAuthentication());
-    expect(loadAccountByEmailRepositoryStub.load).toHaveBeenCalledWith("any_email@mail.com");
+    expect(loadAccountByEmailRepositoryStub.load).toHaveBeenCalledWith(
+      "any_email@mail.com",
+    );
   });
 
   it("should throw if LoadAccountByEmailRepository throws", async () => {
-    loadAccountByEmailRepositoryStub.load.mockImplementationOnce(() => { throw new Error(); });
+    loadAccountByEmailRepositoryStub.load.mockImplementationOnce(() => {
+      throw new Error();
+    });
     const promise = sut.auth(makeFakeAuthentication());
     expect(promise).rejects.toThrow();
   });
@@ -49,11 +61,16 @@ describe("DbAuthentication UseCase", () => {
 
   it("should call HashComparer with correct values", async () => {
     await sut.auth(makeFakeAuthentication());
-    expect(hashComparerStub.compare).toHaveBeenCalledWith("any_password", "hashed_password");
+    expect(hashComparerStub.compare).toHaveBeenCalledWith(
+      "any_password",
+      "hashed_password"
+    );
   });
 
   it("should throw if HashComparer throws", async () => {
-    hashComparerStub.compare.mockImplementationOnce(() => { throw new Error(); });
+    hashComparerStub.compare.mockImplementationOnce(() => {
+      throw new Error();
+    });
     const promise = sut.auth(makeFakeAuthentication());
     expect(promise).rejects.toThrow();
   });
@@ -62,5 +79,10 @@ describe("DbAuthentication UseCase", () => {
     hashComparerStub.compare.mockResolvedValueOnce(false);
     const accessToken = await sut.auth(makeFakeAuthentication());
     expect(accessToken).toBeNull();
+  });
+
+  it("should call TokenGenerator with correct id", async () => {
+    await sut.auth(makeFakeAuthentication());
+    expect(tokenGeneratorStub.generate).toHaveBeenCalledWith("any_id");
   });
 });
