@@ -5,6 +5,7 @@ import { DbAuthentication } from "./db-authentication";
 import { AuthenticationModel } from "../../../data/protocols/authentication";
 import { HashComparer } from "../../../data/protocols/cryptography/hash-comparer";
 import { TokenGenerator } from "../../../data/protocols/cryptography/token-generator";
+import { UpdateAccessTokenRepository } from "../../../data/protocols/db/update-access-token-repository";
 
 const makeFakeAccount = (): AccountEntity => ({
   id: "any_id",
@@ -22,6 +23,7 @@ describe("DbAuthentication UseCase", () => {
   let loadAccountByEmailRepositoryStub: MockProxy<LoadAccountByEmailRepository>;
   let hashComparerStub: MockProxy<HashComparer>;
   let tokenGeneratorStub: MockProxy<TokenGenerator>;
+  let updateAccessTokenRepositoryStub: MockProxy<UpdateAccessTokenRepository>;
   let sut: DbAuthentication;
 
   beforeEach(() => {
@@ -31,10 +33,13 @@ describe("DbAuthentication UseCase", () => {
     hashComparerStub.compare.mockResolvedValue(true);
     tokenGeneratorStub = mock();
     tokenGeneratorStub.generate.mockResolvedValue("any_token");
+    updateAccessTokenRepositoryStub = mock();
+    updateAccessTokenRepositoryStub.update.mockResolvedValueOnce();
     sut = new DbAuthentication(
       loadAccountByEmailRepositoryStub,
       hashComparerStub,
-      tokenGeneratorStub
+      tokenGeneratorStub,
+      updateAccessTokenRepositoryStub,
     );
   });
 
@@ -97,5 +102,11 @@ describe("DbAuthentication UseCase", () => {
   it("should call TokenGenerator with correct id", async () => {
     const accessToken = await sut.auth(makeFakeAuthentication());
     expect(accessToken).toBe("any_token");
+  });
+
+  it("should call UpdateAccessTokenRepository with correct values", async () => {
+    updateAccessTokenRepositoryStub.update.mockResolvedValueOnce();
+    await sut.auth(makeFakeAuthentication());
+    expect(updateAccessTokenRepositoryStub.update).toHaveBeenCalledWith("any_id", "any_token");
   });
 });
