@@ -1,11 +1,11 @@
-import { LoadAccountByEmailRepository } from "../../../../data/protocols/db/load-account-by-email-repository";
-import { AddAccountRepository } from "../../../../data/protocols/db/add-account-repository";
+import { AddAccountRepository } from "../../../../data/protocols/db/account/add-account-repository";
 import { AddAccount } from "../../../../domain/usecases/add-account";
 import { MongoDbHelper } from "../helpers/mongodb-helper";
 import { IdMapper } from "../mappers/id-mapper";
 import { AccountEntity } from "../../../../domain/entities/account";
-import { UpdateAccessTokenRepository } from "../../../../data/protocols/db/update-access-token-repository";
+import { UpdateAccessTokenRepository } from "../../../../data/protocols/db/account/update-access-token-repository";
 import { ObjectId } from "mongodb";
+import { LoadAccountByEmailRepository } from "../../../../data/protocols/db/account/load-account-by-email-repository";
 
 export class AccountMongoRepository implements AddAccountRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository {
   async add (account: AddAccount.Params): Promise<AddAccount.Result> {

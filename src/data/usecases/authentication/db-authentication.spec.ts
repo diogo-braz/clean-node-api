@@ -1,11 +1,11 @@
-import { LoadAccountByEmailRepository } from "../../../data/protocols/db/load-account-by-email-repository";
+import { LoadAccountByEmailRepository } from "../../../data/protocols/db/account/load-account-by-email-repository";
 import { AccountEntity } from "../../../domain/entities/account";
 import { MockProxy, mock } from "jest-mock-extended";
 import { DbAuthentication } from "./db-authentication";
 import { AuthenticationModel } from "../../../data/protocols/authentication";
 import { HashComparer } from "../../../data/protocols/cryptography/hash-comparer";
 import { Encrypter } from "../../protocols/cryptography/encrypter";
-import { UpdateAccessTokenRepository } from "../../../data/protocols/db/update-access-token-repository";
+import { UpdateAccessTokenRepository } from "../../protocols/db/account/update-access-token-repository";
 
 const makeFakeAccount = (): AccountEntity => ({
   id: "any_id",

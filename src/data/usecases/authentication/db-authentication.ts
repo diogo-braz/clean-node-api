@@ -1,8 +1,8 @@
-import { LoadAccountByEmailRepository } from "../../../data/protocols/db/load-account-by-email-repository";
+import { LoadAccountByEmailRepository } from "../../../data/protocols/db/account/load-account-by-email-repository";
 import { Authentication, AuthenticationModel } from "../../../data/protocols/authentication";
 import { HashComparer } from "../../../data/protocols/cryptography/hash-comparer";
 import { Encrypter } from "../../protocols/cryptography/encrypter";
-import { UpdateAccessTokenRepository } from "../../../data/protocols/db/update-access-token-repository";
+import { UpdateAccessTokenRepository } from "../../protocols/db/account/update-access-token-repository";
 
 export class DbAuthentication implements Authentication {
   constructor (
