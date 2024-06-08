@@ -1,8 +1,10 @@
 {
   "name": "clean-node-api",
   "version": "1.1.0",
-  "main": "index.js",  "scripts": {
-    "start": "sucrase-node src/main/server.ts",
+  "main": "index.js",
+  "scripts": {
+    "start": "node dist/main/server.js",
+    "dev": "sucrase-node src/main/server.ts",
     "build": "rimraf dist && tsc -p tsconfig-build.json",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
@@ -46,7 +48,6 @@
   "dependencies": {
     "bcrypt": "^5.1.1",
     "express": "^4.19.2",
-    "fast-glob": "^3.3.2",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.6.1",
     "validator": "^13.12.0"
