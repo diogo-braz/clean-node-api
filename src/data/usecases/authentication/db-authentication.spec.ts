@@ -28,7 +28,7 @@ describe("DbAuthentication UseCase", () => {
 
   beforeEach(() => {
     loadAccountByEmailRepositoryStub = mock();
-    loadAccountByEmailRepositoryStub.load.mockResolvedValue(makeFakeAccount());
+    loadAccountByEmailRepositoryStub.loadByEmail.mockResolvedValue(makeFakeAccount());
     hashComparerStub = mock();
     hashComparerStub.compare.mockResolvedValue(true);
     encrypterStub = mock();
@@ -45,13 +45,13 @@ describe("DbAuthentication UseCase", () => {
 
   it("should call LoadAccountByEmailRepository with correct email", async () => {
     await sut.auth(makeFakeAuthentication());
-    expect(loadAccountByEmailRepositoryStub.load).toHaveBeenCalledWith(
+    expect(loadAccountByEmailRepositoryStub.loadByEmail).toHaveBeenCalledWith(
       "any_email@mail.com",
     );
   });
 
   it("should throw if LoadAccountByEmailRepository throws", async () => {
-    loadAccountByEmailRepositoryStub.load.mockImplementationOnce(() => {
+    loadAccountByEmailRepositoryStub.loadByEmail.mockImplementationOnce(() => {
       throw new Error();
     });
     const promise = sut.auth(makeFakeAuthentication());
@@ -59,7 +59,7 @@ describe("DbAuthentication UseCase", () => {
   });
 
   it("should return null if LoadAccountByEmailRepository returns null", async () => {
-    loadAccountByEmailRepositoryStub.load.mockResolvedValueOnce(null);
+    loadAccountByEmailRepositoryStub.loadByEmail.mockResolvedValueOnce(null);
     const accessToken = await sut.auth(makeFakeAuthentication());
     expect(accessToken).toBeNull();
   });
