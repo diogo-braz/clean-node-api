@@ -1,4 +1,4 @@
-import { BcryptAdapter } from "../../../infra/cryptography/bcrypt-adapter";
+import { BcryptAdapter } from "../../../infra/cryptography/bcrypt-adapter/bcrypt-adapter";
 import { makeSignUpValidation } from "./signup-validation";
 import { DbAddAccount } from "../../../data/usecases/add-account/db-add-account";
 import { AccountMongoRepository } from "../../../infra/db/mongodb/account-repository/account";
