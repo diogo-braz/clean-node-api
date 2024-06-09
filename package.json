@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node dist/main/server.js",
-    "dev": "sucrase-node src/main/server.ts",
+    "up": "npm run build && docker compose up -d",
+    "down": "docker compose down",
     "build": "rimraf dist && tsc -p tsconfig-build.json",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
@@ -12,7 +13,7 @@
     "test:watch": "npm test -- --watch",
     "test:staged": "npm test -- --findRelatedTests",
     "test:coverage": "npm test -- --coverage",
-    "prepare": "husky"
+    "prepare": "husky || true"
   },
   "engines": {
     "node": "20.x"
@@ -40,7 +41,6 @@
     "jest-mock-extended": "^3.0.7",
     "lint-staged": "^15.2.2",
     "rimraf": "^5.0.5",
-    "sucrase": "^3.35.0",
     "supertest": "^7.0.0",
     "ts-jest": "^29.1.2",
     "typescript": "^5.4.5"
