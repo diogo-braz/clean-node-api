@@ -1,0 +1,23 @@
+name: "simple-auth-api"
+
+services:
+  mongo:
+    container_name: mongo-container
+    image: mongo:7
+    restart: always
+    volumes:
+      - ./data:/data/db
+    ports:
+      - 27017:27017
+  api:
+    container_name: api-container
+    build: .
+    image: simple-auth-api
+    restart: always
+    command: npm start
+    volumes:
+      - ./dist:/app/dist
+    ports:
+      - 3333:3333
+    links:
+      - mongo
